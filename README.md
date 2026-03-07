@@ -1,73 +1,52 @@
-# React + TypeScript + Vite
+# retirement-vision — 年金手取り最適化シミュレーター
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+「年金を繰り下げると、実際の手取りはどれだけ増えるのか？」を定量的に可視化するWebアプリケーションです。
 
-Currently, two official plugins are available:
+ねんきん定期便の年金見込み額を起点に、受給開始年齢（60〜75歳）・就労収入・配偶者収入・iDeCoなどを考慮し、税金・社会保険料控除後の**実際の手取り額**と**生涯受取総額**を比較できます。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 主な機能
 
-## React Compiler
+- 受給開始年齢ごとの手取り年金額シミュレーション
+- 繰り上げ（60〜64歳）・繰り下げ（66〜75歳）の比較
+- 税金（所得税・住民税）・社会保険料の自動計算
+- 就労収入・配偶者収入との合算計算（在職老齢年金の減額対応）
+- 損益分岐点（何歳まで生きると繰り下げが得か）のグラフ表示
+- データはブラウザ内に保存（サーバー送信なし）
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## セットアップ
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## コマンド
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| コマンド | 説明 |
+|---------|------|
+| `npm run dev` | 開発サーバー起動 |
+| `npm run build` | 型チェック + ビルド |
+| `npm run lint` | ESLint実行 |
+| `npm run preview` | ビルド済みアプリのプレビュー |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 技術スタック
+
+- React 19 + TypeScript
+- Vite 7
+- Tailwind CSS v4
+- shadcn/ui（Radix UI）
+- Zustand（状態管理）
+- Recharts（グラフ描画）
+- react-router
+
+## 計算仕様
+
+- 税率：東京都新宿区の令和6年度基準
+- 繰り上げ減額：-0.4%/月、繰り下げ増額：+0.7%/月
+- 在職老齢年金：給与+年金が月額50万円超で減額
+
+詳細は [docs/requirements.md](docs/requirements.md) を参照してください。
+
+## ライセンス
+
+Private
