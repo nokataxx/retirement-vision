@@ -40,23 +40,37 @@ export function NetIncomeChart({
       ])
     ).sort((a, b) => a - b);
 
-    let cumulativeBaseline = 0;
-    let cumulativeSimulated = 0;
-
-    return allAges.map((age) => {
-      cumulativeBaseline += baselineMap.get(age) ?? 0;
-      cumulativeSimulated += simulatedMap.get(age) ?? 0;
-      return {
-        age,
-        baseline: Math.round(cumulativeBaseline * 10) / 10,
-        simulated: Math.round(cumulativeSimulated * 10) / 10,
-      };
-    });
+    return allAges.reduce<{ age: number; baseline: number; simulated: number }[]>(
+      (acc, age) => {
+        const prev = acc.length > 0 ? acc[acc.length - 1] : { baseline: 0, simulated: 0 };
+        acc.push({
+          age,
+          baseline: Math.round((prev.baseline + (baselineMap.get(age) ?? 0)) * 10) / 10,
+          simulated: Math.round((prev.simulated + (simulatedMap.get(age) ?? 0)) * 10) / 10,
+        });
+        return acc;
+      },
+      []
+    );
   }, [baselineBreakdowns, simulatedBreakdowns]);
 
   return (
     <div className="border-t pt-6">
-      <h3 className="mb-3 text-lg font-semibold">累計手取り額の比較</h3>
+      <h3 className="mb-3 text-lg font-semibold">累計手取り額 比較グラフ</h3>
+      {pensionStartAge !== 65 && (
+        <p className="mb-3 pr-12 text-sm text-right">
+          {breakEvenAge !== null ? (
+            <>
+              損益分岐点：
+              <span className="font-bold text-lg">{breakEvenAge}歳</span>
+            </>
+          ) : (
+            <span className="text-muted-foreground">
+              想定寿命までに損益分岐点に達しません
+            </span>
+          )}
+        </p>
+      )}
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: 10 }}>
           <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
@@ -104,20 +118,6 @@ export function NetIncomeChart({
           />
         </LineChart>
       </ResponsiveContainer>
-      {pensionStartAge !== 65 && (
-        <p className="mt-3 text-sm text-center">
-          {breakEvenAge !== null ? (
-            <>
-              損益分岐点：
-              <span className="font-bold text-lg">{breakEvenAge}歳</span>
-            </>
-          ) : (
-            <span className="text-muted-foreground">
-              想定寿命までに損益分岐点に達しません
-            </span>
-          )}
-        </p>
-      )}
     </div>
   );
 }

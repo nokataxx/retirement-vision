@@ -5,6 +5,8 @@ import { InputPanel } from "@/components/inputs/InputPanel";
 import { BreakdownTable } from "@/components/results/BreakdownTable";
 import { PensionStartAgeSlider } from "@/components/results/PensionStartAgeSlider";
 import { NetIncomeChart } from "@/components/results/NetIncomeChart";
+import { PensionStartAgeComparisonTable } from "@/components/results/PensionStartAgeComparisonTable";
+import { NetIncomeByStartAgeChart } from "@/components/results/NetIncomeByStartAgeChart";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 function App() {
@@ -47,7 +49,7 @@ function App() {
               <BreakdownTable
                 breakdowns={result.annualBreakdowns}
                 pensionStartAge={pension.pensionStartAge}
-                subtitle={`${pension.pensionStartAge}歳受給`}
+                subtitle={`${pension.pensionStartAge}歳受給シミュレーション`}
                 headerSlot={<PensionStartAgeSlider />}
               />
             </div>
@@ -56,6 +58,16 @@ function App() {
               simulatedBreakdowns={result.annualBreakdowns}
               pensionStartAge={pension.pensionStartAge}
               breakEvenAge={result.summary.breakEvenAge}
+            />
+            <PensionStartAgeComparisonTable
+              basic={basic}
+              pension={pension}
+              otherIncome={otherIncome}
+            />
+            <NetIncomeByStartAgeChart
+              basic={basic}
+              pension={pension}
+              otherIncome={otherIncome}
             />
           </div>
         </div>
