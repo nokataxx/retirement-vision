@@ -31,7 +31,7 @@ const defaultPension: PensionInfo = {
 
 const defaultOtherIncome: OtherIncome = {
   employmentIncome: 0,
-  employmentEndAge: null,
+  employmentEndAge: 65,
   idecoAmount: 0,
   idecoStartAge: 65,
   corporatePensionAmount: 0,

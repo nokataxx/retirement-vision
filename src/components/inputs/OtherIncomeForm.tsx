@@ -143,12 +143,16 @@ export function OtherIncomeForm() {
                 <Label htmlFor="dividendTaxMethod" className="cursor-help">課税方式</Label>
               </TooltipTrigger>
               <TooltipContent side="bottom" align="start" sideOffset={4} className="max-w-72">
-                <p>
-                  <strong>源泉徴収：</strong>20.315%が天引きされ、社会保険料に影響しません。
-                </p>
-                <p className="mt-1">
-                  <strong>確定申告：</strong>総所得に算入され、社会保険料にも影響します。
-                </p>
+                <div className="flex flex-col gap-2">
+                  <div>
+                    <div className="font-semibold">源泉徴収</div>
+                    <div>20.315%が天引きされ、社会保険料に影響しません。</div>
+                  </div>
+                  <div>
+                    <div className="font-semibold">確定申告</div>
+                    <div>総所得に算入され、社会保険料にも影響します。</div>
+                  </div>
+                </div>
               </TooltipContent>
             </Tooltip>
             <select

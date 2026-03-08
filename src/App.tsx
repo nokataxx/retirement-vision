@@ -41,7 +41,7 @@ function App() {
             <BreakdownTable
               breakdowns={baselineResult.annualBreakdowns}
               pensionStartAge={65}
-              subtitle="65歳受給 ベースライン"
+              subtitle="65歳受給（ベースライン）"
             />
             <div className="pt-6 border-t">
               <BreakdownTable
