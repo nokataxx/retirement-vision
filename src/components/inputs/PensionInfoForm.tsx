@@ -1,7 +1,6 @@
 import { useRetirementStore } from "@/store/retirementStore";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
@@ -14,18 +13,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { calcAdjustedPension } from "@/utils/pension";
 
 export function PensionInfoForm() {
   const { basic, pension, updatePension } = useRetirementStore();
-
-  const adjustedPension = calcAdjustedPension(
-    pension.pensionAmountAt65,
-    pension.pensionStartAge
-  );
-
-  const diffFromBase = adjustedPension - pension.pensionAmountAt65;
-  const diffRate = ((adjustedPension / pension.pensionAmountAt65 - 1) * 100).toFixed(1);
 
   return (
     <div className="space-y-4">
@@ -56,34 +46,6 @@ export function PensionInfoForm() {
             />
             <span className="text-sm text-muted-foreground whitespace-nowrap">万円/年</span>
           </div>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label>
-          受給開始年齢：
-          <span className="font-bold text-primary">{pension.pensionStartAge}歳</span>
-        </Label>
-        <Slider
-          min={60}
-          max={75}
-          step={1}
-          value={[pension.pensionStartAge]}
-          onValueChange={([v]) => updatePension({ pensionStartAge: v })}
-        />
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>60歳（繰り上げ）</span>
-          <span>65歳</span>
-          <span>75歳（繰り下げ）</span>
-        </div>
-        <div className="rounded-md bg-muted p-3 text-sm">
-          <p>
-            調整後年金額：
-            <span className="font-bold">{adjustedPension.toFixed(1)}</span>万円/年
-            <span className={`ml-2 ${diffFromBase >= 0 ? "text-green-600" : "text-red-600"}`}>
-              ({diffFromBase >= 0 ? "+" : ""}{diffRate}%)
-            </span>
-          </p>
         </div>
       </div>
 

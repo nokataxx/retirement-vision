@@ -1,13 +1,22 @@
+import { useMemo } from "react";
 import { useRetirementStore } from "@/store/retirementStore";
 import { useSimulation } from "@/hooks/useSimulation";
 import { InputPanel } from "@/components/inputs/InputPanel";
-import { SummaryCards } from "@/components/results/SummaryCards";
 import { BreakdownTable } from "@/components/results/BreakdownTable";
+import { PensionStartAgeSlider } from "@/components/results/PensionStartAgeSlider";
+import { NetIncomeChart } from "@/components/results/NetIncomeChart";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 function App() {
   const { basic, pension, otherIncome } = useRetirementStore();
   const result = useSimulation({ basic, pension, otherIncome });
+
+  // 65歳受給のベースライン（比較用）
+  const baselineInput = useMemo(
+    () => ({ basic, pension: { ...pension, pensionStartAge: 65 }, otherIncome }),
+    [basic, pension, otherIncome]
+  );
+  const baselineResult = useSimulation(baselineInput);
 
   return (
     <TooltipProvider>
@@ -26,11 +35,26 @@ function App() {
           </aside>
 
           <div className="space-y-6">
-            <SummaryCards
-              summary={result.summary}
-              pensionStartAge={pension.pensionStartAge}
+            <h3 className="text-lg font-semibold">年齢別 収支詳細</h3>
+            <BreakdownTable
+              breakdowns={baselineResult.annualBreakdowns}
+              pensionStartAge={65}
+              subtitle="65歳受給 ベースライン"
             />
-            <BreakdownTable breakdowns={result.annualBreakdowns} />
+            <div className="pt-6 border-t">
+              <BreakdownTable
+                breakdowns={result.annualBreakdowns}
+                pensionStartAge={pension.pensionStartAge}
+                subtitle={`${pension.pensionStartAge}歳受給`}
+                headerSlot={<PensionStartAgeSlider />}
+              />
+            </div>
+            <NetIncomeChart
+              baselineBreakdowns={baselineResult.annualBreakdowns}
+              simulatedBreakdowns={result.annualBreakdowns}
+              pensionStartAge={pension.pensionStartAge}
+              breakEvenAge={result.summary.breakEvenAge}
+            />
           </div>
         </div>
       </main>
