@@ -36,6 +36,8 @@ const defaultOtherIncome: OtherIncome = {
   idecoStartAge: 65,
   corporatePensionAmount: 0,
   realEstateIncome: 0,
+  dividendIncome: 0,
+  dividendTaxMethod: "withholding",
 };
 
 export const useRetirementStore = create<RetirementStore>()(

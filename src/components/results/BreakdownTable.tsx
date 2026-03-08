@@ -10,6 +10,7 @@ interface BreakdownTableProps {
 }
 
 export function BreakdownTable({ breakdowns, pensionStartAge, title, subtitle, headerSlot }: BreakdownTableProps) {
+  const hasDividendWithholding = breakdowns.some((b) => b.dividendWithholdingTax > 0);
   const lifetimeTotal = Math.round(
     breakdowns.reduce((sum, b) => sum + b.netIncome, 0) * 10
   ) / 10;
@@ -47,6 +48,9 @@ export function BreakdownTable({ breakdowns, pensionStartAge, title, subtitle, h
               <th className="p-2 text-right">住民税</th>
               <th className="p-2 text-right">介護保険</th>
               <th className="p-2 text-right">医療保険</th>
+              {hasDividendWithholding && (
+                <th className="p-2 text-right">配当源泉</th>
+              )}
               <th className="p-2 text-right font-semibold">手取り</th>
             </tr>
           </thead>
@@ -72,6 +76,13 @@ export function BreakdownTable({ breakdowns, pensionStartAge, title, subtitle, h
                     ? `-${b.healthInsurance.toFixed(1)}`
                     : "—"}
                 </td>
+                {hasDividendWithholding && (
+                  <td className="p-2 text-right text-red-600">
+                    {b.dividendWithholdingTax > 0
+                      ? `-${b.dividendWithholdingTax.toFixed(1)}`
+                      : "—"}
+                  </td>
+                )}
                 <td className="p-2 text-right font-semibold">
                   {b.netIncome.toFixed(1)}
                 </td>

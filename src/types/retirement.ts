@@ -34,6 +34,10 @@ export interface OtherIncome {
   corporatePensionAmount: number;
   /** 不動産収入（万円/年） */
   realEstateIncome: number;
+  /** 配当所得（万円/年） */
+  dividendIncome: number;
+  /** 配当の課税方式: withholding=源泉徴収(申告不要), declaration=確定申告 */
+  dividendTaxMethod: "withholding" | "declaration";
 }
 
 /** 全入力パラメータ */
@@ -62,6 +66,8 @@ export interface AnnualBreakdown {
   healthInsurance: number;
   /** 在職老齢年金の減額（万円） */
   pensionReduction: number;
+  /** 配当源泉徴収税額（万円） */
+  dividendWithholdingTax: number;
   /** 手取り合計（万円） */
   netIncome: number;
 }

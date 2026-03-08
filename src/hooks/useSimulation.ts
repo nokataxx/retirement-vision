@@ -47,6 +47,11 @@ function calcOtherIncomeAtAge(
     total += otherIncome.realEstateIncome;
   }
 
+  // 配当所得（確定申告する分のみ合算。源泉徴収の場合は別途処理）
+  if (otherIncome.dividendIncome > 0 && otherIncome.dividendTaxMethod === "declaration") {
+    total += otherIncome.dividendIncome;
+  }
+
   return total;
 }
 
@@ -114,20 +119,33 @@ function calcAnnualBreakdown(
   const incomeTax = calcIncomeTax(taxableIncome);
   const residenceTax = calcResidenceTax(taxableIncome);
 
+  // 配当の源泉徴収税額（源泉徴収ありの場合のみ）
+  const dividendWithholdingTax =
+    input.otherIncome.dividendIncome > 0 && input.otherIncome.dividendTaxMethod === "withholding"
+      ? Math.round(input.otherIncome.dividendIncome * 0.20315 * 100) / 100
+      : 0;
+
+  // 源泉徴収の場合：配当の手取り分（税引後）を加算
+  const dividendNetIncome =
+    input.otherIncome.dividendIncome > 0 && input.otherIncome.dividendTaxMethod === "withholding"
+      ? input.otherIncome.dividendIncome - dividendWithholdingTax
+      : 0;
+
   const netIncome = Math.round(
-    (totalIncome - incomeTax - residenceTax - insurance.total) * 100
+    (totalIncome + dividendNetIncome - incomeTax - residenceTax - insurance.total) * 100
   ) / 100;
 
   return {
     age,
     pensionIncome,
-    otherIncome,
-    totalIncome,
+    otherIncome: otherIncome + (input.otherIncome.dividendTaxMethod === "withholding" ? input.otherIncome.dividendIncome : 0),
+    totalIncome: totalIncome + (input.otherIncome.dividendTaxMethod === "withholding" ? input.otherIncome.dividendIncome : 0),
     incomeTax,
     residenceTax,
     nursingInsurance: insurance.nursing,
     healthInsurance: insurance.health,
     pensionReduction,
+    dividendWithholdingTax,
     netIncome: Math.max(netIncome, 0),
   };
 }
@@ -221,5 +239,7 @@ export function useSimulation(input: SimulationInput): SimulationResult {
     input.otherIncome.idecoStartAge,
     input.otherIncome.corporatePensionAmount,
     input.otherIncome.realEstateIncome,
+    input.otherIncome.dividendIncome,
+    input.otherIncome.dividendTaxMethod,
   ]);
 }

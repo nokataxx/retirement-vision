@@ -21,11 +21,13 @@ function App() {
   return (
     <TooltipProvider>
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card px-6 py-4">
-        <h1 className="text-xl font-bold">年金手取り最適化シミュレーター</h1>
-        <p className="text-sm text-muted-foreground">
-          受給開始年齢による手取り額の変化を比較できます
-        </p>
+      <header className="border-b bg-card">
+        <div className="mx-auto max-w-7xl px-4 py-4">
+          <h1 className="text-xl font-bold">Retirement Vision</h1>
+          <p className="text-sm text-muted-foreground">
+            年金手取り最適化シミュレーター
+          </p>
+        </div>
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-6">
@@ -35,7 +37,7 @@ function App() {
           </aside>
 
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold">年齢別 収支詳細</h3>
+            <h3 className="text-lg font-semibold mt-4">年齢別 収支詳細</h3>
             <BreakdownTable
               breakdowns={baselineResult.annualBreakdowns}
               pensionStartAge={65}
@@ -59,11 +61,13 @@ function App() {
         </div>
       </main>
 
-      <footer className="border-t px-6 py-4 text-xs text-muted-foreground">
-        <p>
-          本ツールの計算結果は参考値です。税率・保険料率は東京都新宿区の令和6年度基準を使用しています。
-          正確な年金額はねんきんネットまたは年金事務所でご確認ください。
-        </p>
+      <footer className="border-t text-xs text-muted-foreground">
+        <div className="mx-auto max-w-7xl px-4 py-4">
+          <p>
+            本ツールの計算結果は参考値です。税率・保険料率は東京都新宿区の令和6年度基準を使用しています。
+            正確な年金額はねんきんネットまたは年金事務所でご確認ください。
+          </p>
+        </div>
       </footer>
     </div>
     </TooltipProvider>
